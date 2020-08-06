@@ -1,0 +1,38 @@
+# testing docs strings
+>>> user
+<User user_id=1 email=person@person.com>
+
+
+SELECT users.user_id AS users_user_id, users.email AS users_email, users.password AS users_password 
+FROM users 
+ LIMIT %(param_1)s
+
+
+CREATE TABLE users (
+        user_id SERIAL NOT NULL, 
+        email VARCHAR(50), 
+        password VARCHAR(50), 
+        PRIMARY KEY (user_id), 
+        UNIQUE (email)
+)
+
+
+CREATE TABLE movies (
+        movie_id SERIAL NOT NULL, 
+        title VARCHAR, 
+        overview TEXT, 
+        release_date TIMESTAMP WITHOUT TIME ZONE, 
+        poster_path VARCHAR, 
+        PRIMARY KEY (movie_id), 
+        UNIQUE (title)
+)
+
+CREATE TABLE ratings_tbl (
+        rating_id SERIAL NOT NULL, 
+        score INTEGER, 
+        movie_id INTEGER NOT NULL, 
+        user_id INTEGER NOT NULL, 
+        PRIMARY KEY (rating_id), 
+        FOREIGN KEY(movie_id) REFERENCES movies (movie_id), 
+        FOREIGN KEY(user_id) REFERENCES users (user_id)
+)
