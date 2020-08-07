@@ -30,10 +30,25 @@ def view_all_movies():
 def show_movie_detail(movie_id):
     """Show details on a particular movie."""
 
-    movie = crud.get_movie_by_id(movie_id)
-    print(movie)
+    movie_d = crud.get_movie_by_id(movie_id)
+    
+    return render_template('movie_details.html', movie=movie_d)
 
-    return render_template('movie_details.html', movie=movie)
+@app.route('/users')
+def view_all_users():
+    """ View a list of all movie titles """
+
+    all_users = crud.return_all_users()
+
+    return render_template('all_users.html', all_users=all_users)
+
+@app.route('/users/<user_id>')
+def show_user_detail(user_id):
+    """Show details on a particular movie."""
+
+    user_d = crud.get_user_by_id(user_id)
+    
+    return render_template('user_details.html', user=user_d)
 
 
 if __name__ == '__main__':

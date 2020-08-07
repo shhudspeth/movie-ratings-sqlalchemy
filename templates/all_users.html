@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}All Users {% endblock %}
+
+{% block body %}
+    <h2>Navigation</h2>
+        <ul>
+        <li><a href="/homepage">Return to Homepage</a></li>
+        <li><a href="/movies">View all movies</a></li>
+        </ul>
+
+    <h1>User List</h1>
+    <ul>
+    {% for user in all_users %}
+        <li><a href="users/{{user.user_id}}">{{ user.email }}</a></li>
+    {% endfor %} 
+    </ul>
+    <h2>Navigation</h2>
+        <ul>
+        <li><a href="/homepage">Return to Homepage</a></li>
+        <li><a href="/movies">View all movies</a></li>
+        </ul>
+{% endblock %}
