@@ -3,6 +3,11 @@
 {% block title %}{{ movie.title }} - Details{% endblock %}
 
 {% block body %}
+<div>
+  {% if session['rating'] %}
+      <h2>Your Movie Rating is {{session['rating']}}!</h2>  
+  {% endif %}
+</div> 
 <h1>{{ movie.title }}</h1>
 
 <p>
@@ -11,5 +16,27 @@
 <div class="image">
     <img src="{{ movie.poster_path }}">
 </div>
+
+<div>
+  {% if session['user'] %}
+      <h2>Rate this Movie!</h2>
+      <form action="{{movie.movie_id}}" method="POST">
+          <p>
+          <Label>Score</Label>
+           <select name="score">
+             <option value=1>1</option>
+             <option value=2>2</option>
+             <option value=3>3</option>
+             <option value=4>4</option>
+             <option value=5>5</option>
+            </select>
+          </p>
+
+          <p>
+          <input type="submit">
+          </p>
+      </form>
+  {% endif %}
+</div>  
 
 {% endblock %}

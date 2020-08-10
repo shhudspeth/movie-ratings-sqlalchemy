@@ -28,13 +28,33 @@ def view_all_movies():
 
     return render_template('all_movies.html', all_movies=all_movies)
 
+
 @app.route('/movies/<movie_id>')
 def show_movie_detail(movie_id):
     """Show details on a particular movie."""
 
     movie_d = crud.get_movie_by_id(movie_id)
     
+    
     return render_template('movie_details.html', movie=movie_d)
+
+@app.route('/movies/<movie_id>', methods=["POST"])
+def make_movie_rating(movie_id):
+    """Update a movie page with a user rating; store new rating in database."""
+
+    movie_d = crud.get_movie_by_id(movie_id)
+    user_d = crud.get_user_by_id(session['user']['id'])
+    score = request.form['score']
+    print("VARIABLES TO USE", score, user_d, movie_d)
+    
+    new_rating = crud.create_rating(user_d, movie_d, score)
+    
+    session['rating'] = {movie_d.movie_id:score}
+    print(session['rating'])
+    flash(f"You made a rating! {new_rating.score}")
+
+    return redirect('/')
+
 
 @app.route('/users')
 def view_all_users():
@@ -50,6 +70,7 @@ def register_new_user():
     user = crud.get_user_by_email(email)
     session['show_login'] = True
     session['show_form'] = True
+    session['rating']=[]
 
     if user:
         flash("User, you already have an account. Please login")
