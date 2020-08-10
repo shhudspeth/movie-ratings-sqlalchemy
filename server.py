@@ -11,11 +11,13 @@ app = Flask(__name__)
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 
+# session = "eyJjYXJ0IjpbMiwyLDE0LDIsMiwyLDJdfQ.CP0ryA2EMSZdE"
 
 # Replace this with routes and view functions!
 @app.route('/')
 def homepage():
     """ View homepage """
+    
     return render_template('homepage.html')
 
 @app.route('/movies')
@@ -36,15 +38,60 @@ def show_movie_detail(movie_id):
 
 @app.route('/users')
 def view_all_users():
-    """ View a list of all movie titles """
-
+    """ View a list of all user"""
     all_users = crud.return_all_users()
 
     return render_template('all_users.html', all_users=all_users)
 
+@app.route('/users', methods=["POST"])
+def register_new_user():
+    """ Checks for and or registers a new user"""
+    email = request.form['email']
+    user = crud.get_user_by_email(email)
+    session['show_login'] = True
+    session['show_form'] = True
+
+    if user:
+        flash("User, you already have an account. Please login")
+        session['show_form'] = False
+        session['show_login'] = True
+        return redirect('/')
+
+    else:
+        flash('creating new user')
+        password = request.form['password']
+        crud.create_user(email, password)
+
+    return redirect('/')
+
+@app.route('/login', methods=["POST"])
+def login_user():
+    """ Checks for and or registers a new user"""
+    # get email and password from html form post
+    email = request.form['email']
+    password = request.form['password']
+
+    # get user info from db using crud function
+    user = crud.get_user_by_email(email)
+    session['show_form'] = False
+        
+
+    # check to see if password in db matches form password 
+    if user.password==password:
+        session['user'] = {'id': user.user_id, 'email': user.email}
+        session['show_form'] = False
+        session['show_login'] = False
+        flash("User, you are logged in!")
+        return redirect('/')
+
+    else:
+        flash('Incorrect password or email. Please try again')   
+        return redirect('/')
+
+
 @app.route('/users/<user_id>')
 def show_user_detail(user_id):
-    """Show details on a particular movie."""
+    """Show details on a user."""
 
     user_d = crud.get_user_by_id(user_id)
     
